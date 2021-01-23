@@ -20,14 +20,18 @@ class QWOPEnv:
         self.driver.get(f'http://localhost:{PORT}/Athletics.html')
         
         # Wait a bit and then start game
-        time.sleep(1)
-        self.driver.find_element_by_xpath("//body").click()
+        for _ in range(3):
+            time.sleep(.4)
+            self.driver.find_element_by_xpath("//body").click()
+            # self.driver.execute_script(f'click({50},{50})')        
+            # Define action chains
+            
+            # self.actions = ActionChains(self.driver)
+            # self.actions.move_to_element(self.driver.find_element_by_xpath("//body")).click().pause(100).click().perform();
         
-        # Define action chains
-        self.actions = ActionChains(self.driver)
 
     def _get_variable_(self, var_name):
-        return self.driver.execute_script(f'return {var_name}')
+        return self.driver.execute_script(f'return {var_name};')
     
     def _get_state_(self):
         
@@ -42,16 +46,8 @@ class QWOPEnv:
         
     def send_keys(self, keys):
         
-        if len(keys) > 1:
-            keys = list(keys)
-        
-        self.actions.key_down(*keys)
-        self.actions.perform()
-        self.actions = ActionChains(self.driver)
-        time.sleep(PRESS_DURATION)
-        self.actions.key_up(*keys)
-        self.actions.perform()
-        self.actions = ActionChains(self.driver)
+        for char in keys:
+            self.driver.execute_script(f'simulateKeydown("{char}");')
         
     def reset(self):
         
