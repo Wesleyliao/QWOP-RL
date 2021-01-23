@@ -20,16 +20,9 @@ class QWOPEnv:
         self.driver.get(f'http://localhost:{PORT}/Athletics.html')
         
         # Wait a bit and then start game
-        for _ in range(3):
-            time.sleep(.4)
-            self.driver.find_element_by_xpath("//body").click()
-            # self.driver.execute_script(f'click({50},{50})')        
-            # Define action chains
-            
-            # self.actions = ActionChains(self.driver)
-            # self.actions.move_to_element(self.driver.find_element_by_xpath("//body")).click().pause(100).click().perform();
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//body").click()
         
-
     def _get_variable_(self, var_name):
         return self.driver.execute_script(f'return {var_name};')
     
