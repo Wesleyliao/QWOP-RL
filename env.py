@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys 
 import time
 
 PORT = 8000
@@ -25,16 +26,39 @@ class QWOPEnv:
         # Define action chains
         self.actions = ActionChains(self.driver)
 
+    def _get_variable_(self, var_name):
+        return self.driver.execute_script(f'return {var_name}')
+    
+    def _get_state_(self):
+        
+        game_state = self._get_variable_('globalgamestate')
+        body_state = self._get_variable_('globalbodystate')
+        
+        print(game_state)
+        print(body_state)
+        
+        return None
+        
+        
     def send_keys(self, keys):
-        self.actions.send_keys(keys)
+        
+        if len(keys) > 1:
+            keys = list(keys)
+        
+        self.actions.key_down(*keys)
         self.actions.perform()
+        self.actions = ActionChains(self.driver)
+        time.sleep(PRESS_DURATION)
+        self.actions.key_up(*keys)
+        self.actions.perform()
+        self.actions = ActionChains(self.driver)
         
     def reset(self):
         
         # Send 'R' key press to restart game
         # self.driver.execute_script(produce_sendkey('r'))
-        self.actions.send_keys('r')
-        self.actions.perform()
+        self.send_keys('r')
+        self.send_keys(Keys.SPACE)
         state = False
         return state
     
@@ -46,7 +70,5 @@ class QWOPEnv:
 if __name__ == '__main__':
     env = QWOPEnv()
     while True:
-        env.reset()
-        time.sleep(1)
-    # print(f'Possible actions: \n{ACTIONS}')
-    time.sleep(100000)
+        env._get_state_()
+        time.sleep(3)
