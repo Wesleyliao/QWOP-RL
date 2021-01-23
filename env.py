@@ -1,12 +1,14 @@
 from selenium import webdriver
+from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 PORT = 8000
-
+PRESS_DURATION = 0.5
 ACTIONS = {
     0: 'qw', 1: 'qo', 2: 'qp', 3: 'q', 4: 'wo', 
     5: 'wp', 6: 'w', 7: 'op', 8: 'o', 9: 'p', 10:''
 }
+
         
 class QWOPEnv:
     
@@ -19,11 +21,21 @@ class QWOPEnv:
         # Wait a bit and then start game
         time.sleep(1)
         self.driver.find_element_by_xpath("//body").click()
+        
+        # Define action chains
+        self.actions = ActionChains(self.driver)
 
+    def send_keys(self, keys):
+        self.actions.send_keys(keys)
+        self.actions.perform()
+        
     def reset(self):
         
         # Send 'R' key press to restart game
-        state = None
+        # self.driver.execute_script(produce_sendkey('r'))
+        self.actions.send_keys('r')
+        self.actions.perform()
+        state = False
         return state
     
     def step(self):
@@ -33,6 +45,8 @@ class QWOPEnv:
         
 if __name__ == '__main__':
     env = QWOPEnv()
-    env.reset()
-    print(f'Possible actions: \n{ACTIONS}')
+    while True:
+        env.reset()
+        time.sleep(1)
+    # print(f'Possible actions: \n{ACTIONS}')
     time.sleep(100000)
