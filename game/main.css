@@ -1,0 +1,13 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+#details {
+    float: right;
+}
+
+#generation-text {
+    position: absolute;
+    top: 0;
+    right: 150;
+}
