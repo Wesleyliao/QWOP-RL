@@ -15,6 +15,7 @@ make = "*"
 atari-py = "*"
 pygame = "*"
 selenium = "*"
+pynput = "*"
 
 [dev-packages]
 

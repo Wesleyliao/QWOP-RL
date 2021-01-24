@@ -24,4 +24,5 @@ Test / run agent
 
 ## Contributions
 - Huge shoutouts to Lachlan for his help in getting QWOP to run offline. https://github.com/etopiei/QWOP-Bot
+- Key input inspiration from https://github.com/juanto121/qwop-ai
 - https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf
