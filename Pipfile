@@ -16,6 +16,7 @@ atari-py = "*"
 pygame = "*"
 selenium = "*"
 pynput = "*"
+pre-commit = "*"
 
 [dev-packages]
 
