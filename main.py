@@ -1,23 +1,34 @@
 import click
-from stable_baselines import PPO2
-from stable_baselines.common.policies import MlpPolicy
+import tensorflow as tf
+from stable_baselines import ACER
 
 from game.env import QWOPEnv
 
 TRAIN_TIME_STEPS = 60000
-MODEL_PATH = "models/PPO2_MLP_v1"
+MODEL_PATH = "models/ACER_MLP_v1"
 
 
 def run_train():
+
+    # Define policy network
+    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[128, 128, 64])
+
+    # Initialize env and model
     env = QWOPEnv()
-    model = PPO2(MlpPolicy, env, verbose=1)
+    model = ACER('MlpPolicy', env, policy_kwargs=policy_kwargs, verbose=1)
+
+    # Train and save
     model.learn(total_timesteps=TRAIN_TIME_STEPS)
     model.save(MODEL_PATH)
 
 
 def run_test():
+
+    # Initialize env and model
     env = QWOPEnv()
-    model = PPO2.load(MODEL_PATH)
+    model = ACER.load(MODEL_PATH)
+
+    # Run test
     obs = env.reset()
     for i in range(1000):
         action, _states = model.predict(obs)
