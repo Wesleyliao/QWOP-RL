@@ -26,7 +26,7 @@ class QWOPEnv:
         self.driver.get(f'http://localhost:{PORT}/Athletics.html')
 
         # Wait a bit and then start game
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_xpath("//body").click()
 
         self.keyboard = Controller()
@@ -50,7 +50,6 @@ class QWOPEnv:
         for part in body_state.values():
             state.append(list(part.values()))
         state = np.array(state).flatten()
-        print(len(state))
 
         # Get reward
         if not done:
@@ -67,7 +66,6 @@ class QWOPEnv:
     def send_keys(self, keys):
 
         for char in keys:
-            print(f'pressing {char}')
             self.keyboard.press(char)
 
         time.sleep(PRESS_DURATION)
@@ -94,11 +92,9 @@ class QWOPEnv:
 
 if __name__ == '__main__':
     env = QWOPEnv()
-    actions = list(ACTIONS.values())
+    time.sleep(.5)
     while True:
-        env._get_state_()
         if env.gameover:
             env.reset()
         else:
-            env.send_keys(np.random.choice(actions))
-        time.sleep(.5)
+            env.step(np.random.randint(11))
