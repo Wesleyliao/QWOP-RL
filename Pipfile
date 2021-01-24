@@ -19,6 +19,7 @@ pynput = "*"
 pre-commit = "*"
 stable-baselines = "*"
 tensorflow = "==1.14.0"
+click = "*"
 
 [dev-packages]
 

@@ -12,8 +12,17 @@ PORT = 8000
 PRESS_DURATION = 0.3
 STATE_SPACE_SIZE = 60
 ACTIONS = {
-    0: 'qw', 1: 'qo', 2: 'qp', 3: 'q', 4: 'wo',
-    5: 'wp', 6: 'w', 7: 'op', 8: 'o', 9: 'p', 10: ''
+    0: 'qw',
+    1: 'qo',
+    2: 'qp',
+    3: 'q',
+    4: 'wo',
+    5: 'wp',
+    6: 'w',
+    7: 'op',
+    8: 'o',
+    9: 'p',
+    10: '',
 }
 
 
@@ -27,7 +36,8 @@ class QWOPEnv(gym.Env):
         super(QWOPEnv, self).__init__()
         self.action_space = spaces.Discrete(len(ACTIONS))
         self.observation_space = spaces.Box(
-            low=-np.inf, high=np.inf, shape=[60], dtype=np.float32)
+            low=-np.inf, high=np.inf, shape=[60], dtype=np.float32
+        )
 
         # QWOP specific stuff
         self.gameover = False
