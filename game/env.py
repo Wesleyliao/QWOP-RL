@@ -1,22 +1,35 @@
 import time
 
+import gym
 import numpy as np
+from gym import spaces
 from pynput.keyboard import Controller
 from pynput.keyboard import Key
 from selenium import webdriver
+from stable_baselines.common.env_checker import check_env
 
 PORT = 8000
 PRESS_DURATION = 0.3
+STATE_SPACE_SIZE = 60
 ACTIONS = {
     0: 'qw', 1: 'qo', 2: 'qp', 3: 'q', 4: 'wo',
     5: 'wp', 6: 'w', 7: 'op', 8: 'o', 9: 'p', 10: ''
 }
 
 
-class QWOPEnv:
+class QWOPEnv(gym.Env):
+
+    meta_data = {'render.modes': ['human']}
 
     def __init__(self):
 
+        # Open AI gym specifications
+        super(QWOPEnv, self).__init__()
+        self.action_space = spaces.Discrete(len(ACTIONS))
+        self.observation_space = spaces.Box(
+            low=-np.inf, high=np.inf, shape=[60], dtype=np.float32)
+
+        # QWOP specific stuff
         self.gameover = False
         self.previous_score = 0
         self.previous_time = 0
@@ -52,16 +65,16 @@ class QWOPEnv:
         state = np.array(state).flatten()
 
         # Get reward
-        if not done:
-            reward = game_state['score'] - self.previous_score
-        else:
+        if done and game_state['score'] > 100:
             reward = game_state['score']
+        else:
+            reward = game_state['score'] - self.previous_score
 
         # Update previous scores
         self.previous_score = game_state['score']
         self.previous_time = game_state['scoreTime']
 
-        return state, reward, done, None
+        return state, reward, done, {}
 
     def send_keys(self, keys):
 
@@ -79,7 +92,7 @@ class QWOPEnv:
         self.send_keys(['r', Key.space])
         self.gameover = False
 
-        return self._get_state_()
+        return self._get_state_()[0]
 
     def step(self, action_id):
 
@@ -89,10 +102,16 @@ class QWOPEnv:
 
         return self._get_state_()
 
+    def render(self, mode='human'):
+        pass
+
+    def close(self):
+        pass
+
 
 if __name__ == '__main__':
     env = QWOPEnv()
-    time.sleep(.5)
+    check_env(env)
     while True:
         if env.gameover:
             env.reset()
