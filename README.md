@@ -14,7 +14,7 @@ pipenv install
 pipenv shell
 ```
 
-Start HTTP server for the game itself
+Install Chromedriver for hosting the game https://sites.google.com/a/chromium.org/chromedriver/home. Then, start HTTP server for the game
 
 ```
 python host_game.py
