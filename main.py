@@ -4,7 +4,7 @@ from stable_baselines import ACER
 
 from game.env import QWOPEnv
 
-TRAIN_TIME_STEPS = 60000
+TRAIN_TIME_STEPS = 80000
 MODEL_PATH = "models/ACER_MLP_v1"
 
 
@@ -15,7 +15,27 @@ def run_train():
 
     # Initialize env and model
     env = QWOPEnv()
-    model = ACER('MlpPolicy', env, policy_kwargs=policy_kwargs, verbose=1)
+    model = ACER(
+        'MlpPolicy',
+        env,
+        policy_kwargs=policy_kwargs,
+        n_cpu_tf_sess=5,
+        replay_start=40,
+        verbose=1,
+    )
+
+    # Train and save
+    model.learn(total_timesteps=TRAIN_TIME_STEPS)
+    model.save(MODEL_PATH)
+
+
+def continue_learning():
+
+    env = QWOPEnv()
+
+    # Load model
+    model = ACER.load(MODEL_PATH)
+    model.set_env(env)
 
     # Train and save
     model.learn(total_timesteps=TRAIN_TIME_STEPS)
