@@ -6,6 +6,12 @@ Training a reinforcement learning agent to play QWOP.
 
 ## Instructions
 
+Install Python 3.6
+```
+conda create -n py36 python=3.6 anaconda
+conda activate py36
+```
+
 Install dependencies
 
 ```
@@ -30,15 +36,13 @@ Test agent
 
 ```
 python main.py --test
-
 ```
 
-You can change the constant `MODEL_PATH` in `main.py` so save new models and use them
-for testing.
+To save or use new models, the constant `MODEL_PATH` in `main.py`.
 
 ## Acknowledgements
 
 - The original QWOP game at http://www.foddy.net/Athletics.html
-- Huge shoutouts to Lachlan for his help in getting QWOP to run offline.
+- Lachlan for his help in getting QWOP to run offline.
   https://github.com/etopiei/QWOP-Bot
-- Key input inspiration from https://github.com/juanto121/qwop-ai
+- Keyboard input inspiration from https://github.com/juanto121/qwop-ai
