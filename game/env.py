@@ -11,6 +11,7 @@ from stable_baselines.common.env_checker import check_env
 PORT = 8000
 PRESS_DURATION = 0.2
 STATE_SPACE_N = 81
+STEP_COST = 0.01
 ACTIONS = {
     0: 'qw',
     1: 'qo',
@@ -79,7 +80,7 @@ class QWOPEnv(gym.Env):
         if done and game_state['score'] > 100:
             reward = game_state['score']
         else:
-            reward = game_state['score'] - self.previous_score
+            reward = game_state['score'] - self.previous_score - STEP_COST
 
         # Update previous scores
         self.previous_score = game_state['score']
