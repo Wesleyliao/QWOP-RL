@@ -11,9 +11,7 @@ MODEL_PATH = "models/ACER_MLP_v2"
 def run_train():
 
     # Define policy network
-    policy_kwargs = dict(
-        act_fun=tf.nn.tanh, net_arch=[400, 300, 100], buffer_size=10000
-    )
+    policy_kwargs = dict(act_fun=tf.nn.tanh, net_arch=[400, 300, 100])
 
     # Initialize env and model
     env = QWOPEnv()
