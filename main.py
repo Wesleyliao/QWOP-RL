@@ -4,7 +4,7 @@ from stable_baselines import ACER
 
 from game.env import QWOPEnv
 
-TRAIN_TIME_STEPS = 120000
+TRAIN_TIME_STEPS = 100000
 MODEL_PATH = "models/ACER_MLP_v2"
 
 
