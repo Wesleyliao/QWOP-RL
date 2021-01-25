@@ -10,7 +10,7 @@ from stable_baselines.common.env_checker import check_env
 
 PORT = 8000
 PRESS_DURATION = 0.3
-STATE_SPACE_SIZE = 60
+STATE_SPACE_N = 81
 ACTIONS = {
     0: 'qw',
     1: 'qo',
@@ -36,7 +36,7 @@ class QWOPEnv(gym.Env):
         super(QWOPEnv, self).__init__()
         self.action_space = spaces.Discrete(len(ACTIONS))
         self.observation_space = spaces.Box(
-            low=-np.inf, high=np.inf, shape=[60], dtype=np.float32
+            low=-np.inf, high=np.inf, shape=[STATE_SPACE_N], dtype=np.float32
         )
 
         # QWOP specific stuff
@@ -71,8 +71,8 @@ class QWOPEnv(gym.Env):
         # Get body state
         state = []
         for part in body_state.values():
-            state.append(list(part.values()))
-        state = np.array(state).flatten()
+            state = state + list(part.values())
+        state = np.array(state)
 
         # Get reward
         if done and game_state['score'] > 100:
@@ -126,4 +126,4 @@ if __name__ == '__main__':
         if env.gameover:
             env.reset()
         else:
-            env.step(np.random.randint(11))
+            env.step(env.action_space.sample())
