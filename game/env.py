@@ -9,7 +9,7 @@ from selenium import webdriver
 from stable_baselines.common.env_checker import check_env
 
 PORT = 8000
-PRESS_DURATION = 0.3
+PRESS_DURATION = 0.2
 STATE_SPACE_N = 81
 ACTIONS = {
     0: 'qw',
@@ -29,6 +29,7 @@ ACTIONS = {
 class QWOPEnv(gym.Env):
 
     meta_data = {'render.modes': ['human']}
+    pressed_keys = set()
 
     def __init__(self):
 
@@ -86,21 +87,31 @@ class QWOPEnv(gym.Env):
 
         return state, reward, done, {}
 
+    def _release_all_keys_(self):
+
+        for char in self.pressed_keys:
+            self.keyboard.release(char)
+
+        self.pressed_keys.clear()
+
     def send_keys(self, keys):
 
+        # Release all keys
+        self._release_all_keys_()
+
+        # Hold down current key
         for char in keys:
             self.keyboard.press(char)
+            self.pressed_keys.add(char)
 
         time.sleep(PRESS_DURATION)
-
-        for char in keys:
-            self.keyboard.release(char)
 
     def reset(self):
 
         # Send 'R' key press to restart game
         self.send_keys(['r', Key.space])
         self.gameover = False
+        self._release_all_keys_()
 
         return self._get_state_()[0]
 
