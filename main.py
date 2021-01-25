@@ -4,14 +4,16 @@ from stable_baselines import ACER
 
 from game.env import QWOPEnv
 
-TRAIN_TIME_STEPS = 80000
-MODEL_PATH = "models/ACER_MLP_v1"
+TRAIN_TIME_STEPS = 110000
+MODEL_PATH = "models/ACER_MLP_v2"
 
 
 def run_train():
 
     # Define policy network
-    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[128, 128, 64])
+    policy_kwargs = dict(
+        act_fun=tf.nn.tanh, net_arch=[400, 300, 100], buffer_size=10000
+    )
 
     # Initialize env and model
     env = QWOPEnv()
