@@ -1,4 +1,5 @@
 import os
+import time
 
 import click
 import tensorflow as tf
@@ -61,10 +62,14 @@ def run_test():
     model = ACER.load(MODEL_PATH)
 
     # Run test
+    t = time.time()
+    done = False
     obs = env.reset()
-    for i in range(1000):
+    while not done:
         action, _states = model.predict(obs)
-        obs, rewards, dones, info = env.step(action)
+        obs, rewards, done, info = env.step(action)
+
+    input(f"Test run complete in {time.time()-t} seconds. Press Enter to exit.")
 
 
 @click.command()
