@@ -10,7 +10,7 @@ from pretrain import recorder
 
 TRAIN_TIME_STEPS = 100000
 RECORD_PATH = os.path.join('pretrain', 'human_try1')
-MODEL_PATH = os.path.join('models', 'test_model')
+MODEL_PATH = os.path.join('models', 'ACER_MLP_V3')
 
 
 def define_model():
