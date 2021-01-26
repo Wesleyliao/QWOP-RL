@@ -1,9 +1,7 @@
-import os
 import time
 
 from stable_baselines.gail import generate_expert_traj
 
-RECORD_PATH = os.path.join('pretrain', 'human_try1')
 env = None
 
 MAPPING = {
@@ -54,7 +52,7 @@ def human_expert(_obs):
     raise ValueError(f'Key presses not found {string}')
 
 
-def generate_obs(environment):
+def generate_obs(environment, record_path):
     global env
     env = environment
-    generate_expert_traj(human_expert, RECORD_PATH, env, n_episodes=5)
+    generate_expert_traj(human_expert, record_path, env, n_episodes=5)

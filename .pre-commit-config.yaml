@@ -10,10 +10,19 @@ repos:
       - id: black
         language_version: python3.6
         args: [--skip-string-normalization]
-  - repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v1.5.4
+  - repo: https://github.com/humitos/mirrors-autoflake
+    rev: v1.3
     hooks:
-      - id: autopep8
+      - id: autoflake
+        args:
+          [
+            "--in-place",
+            "--expand-star-imports",
+            "--remove-all-unused-imports",
+            "--remove-unused-variable",
+            "--remove-duplicate-keys",
+            "--ignore-init-module-imports",
+          ]
   - repo: https://github.com/asottile/reorder_python_imports
     rev: v2.3.6
     hooks:
@@ -24,3 +33,4 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies: [flake8-typing-imports==1.7.0]
+        args: [--max-line-length=89]

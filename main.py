@@ -1,18 +1,22 @@
+import os
+
 import click
 import tensorflow as tf
 from stable_baselines import ACER
 
 from game.env import QWOPEnv
+from pretrain import imitation_learning
 from pretrain import recorder
 
 TRAIN_TIME_STEPS = 100000
-MODEL_PATH = "models/ACER_MLP_v2"
+RECORD_PATH = os.path.join('pretrain', 'human_try1')
+MODEL_PATH = os.path.join('models', 'ACER_MLP_v2')
 
 
-def run_train():
+def define_model():
 
     # Define policy network
-    policy_kwargs = dict(act_fun=tf.nn.tanh, net_arch=[400, 300, 100])
+    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[256, 128])
 
     # Initialize env and model
     env = QWOPEnv()
@@ -24,6 +28,13 @@ def run_train():
         replay_start=40,
         verbose=1,
     )
+
+    return model
+
+
+def run_train():
+
+    model = define_model()
 
     # Train and save
     model.learn(total_timesteps=TRAIN_TIME_STEPS)
@@ -66,12 +77,15 @@ def run_record():
 @click.option('--train', default=False, is_flag=True, help='Run training')
 @click.option('--test', default=False, is_flag=True, help='Run test')
 @click.option(
-    '--pretrain_record',
+    '--record',
     default=False,
     is_flag=True,
     help='Record observations for pretraining',
 )
-def main(train, pretrain_record, test):
+@click.option(
+    '--imitate', default=False, is_flag=True, help='Train agent from recordings'
+)
+def main(train, test, record, imitate):
     """Train and test an agent for QWOP."""
 
     if train:
@@ -79,10 +93,14 @@ def main(train, pretrain_record, test):
     if test:
         run_test()
 
-    if pretrain_record:
+    if record:
         run_record()
 
-    if not (test or train or pretrain_record):
+    if imitate:
+        model = define_model()
+        imitation_learning.imitate(model, MODEL_PATH)
+
+    if not (test or train or record or imitate):
         with click.Context(main) as ctx:
             click.echo(main.get_help(ctx))
 
