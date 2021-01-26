@@ -10,7 +10,7 @@ from stable_baselines.common.env_checker import check_env
 
 PORT = 8000
 PRESS_DURATION = 0.2
-STATE_SPACE_N = 81
+STATE_SPACE_N = 71
 ACTIONS = {
     0: 'qw',
     1: 'qo',
@@ -102,9 +102,8 @@ class QWOPEnv(gym.Env):
 
         # Hold down current key
         for char in keys:
-            if self.evoke_actions:
-                self.keyboard.press(char)
-                self.pressed_keys.add(char)
+            self.keyboard.press(char)
+            self.pressed_keys.add(char)
 
         time.sleep(PRESS_DURATION)
 
@@ -121,7 +120,11 @@ class QWOPEnv(gym.Env):
 
         # send action
         keys = ACTIONS[action_id]
-        self.send_keys(keys)
+
+        if self.evoke_actions:
+            self.send_keys(keys)
+        else:
+            time.sleep(PRESS_DURATION)
 
         return self._get_state_()
 

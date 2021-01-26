@@ -82,7 +82,7 @@ def main(train, pretrain_record, test):
     if pretrain_record:
         run_record()
 
-    if not test and not train:
+    if not (test or train or pretrain_record):
         with click.Context(main) as ctx:
             click.echo(main.get_help(ctx))
 
