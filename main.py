@@ -10,7 +10,7 @@ from pretrain import recorder
 
 TRAIN_TIME_STEPS = 100000
 RECORD_PATH = os.path.join('pretrain', 'human_try1')
-MODEL_PATH = os.path.join('models', 'ACER_MLP_v2')
+MODEL_PATH = os.path.join('models', 'test_model')
 
 
 def define_model():
@@ -67,12 +67,6 @@ def run_test():
         obs, rewards, dones, info = env.step(action)
 
 
-def run_record():
-
-    env = QWOPEnv()
-    recorder.generate_obs(env)
-
-
 @click.command()
 @click.option('--train', default=False, is_flag=True, help='Run training')
 @click.option('--test', default=False, is_flag=True, help='Run test')
@@ -94,11 +88,12 @@ def main(train, test, record, imitate):
         run_test()
 
     if record:
-        run_record()
+        env = QWOPEnv()
+        recorder.generate_obs(env, RECORD_PATH)
 
     if imitate:
         model = define_model()
-        imitation_learning.imitate(model, MODEL_PATH)
+        imitation_learning.imitate(model, RECORD_PATH, MODEL_PATH)
 
     if not (test or train or record or imitate):
         with click.Context(main) as ctx:
