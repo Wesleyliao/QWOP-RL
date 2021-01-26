@@ -44,6 +44,7 @@ class QWOPEnv(gym.Env):
         self.gameover = False
         self.previous_score = 0
         self.previous_time = 0
+        self.evoke_actions = True
 
         # Open browser and go to QWOP page
         self.driver = webdriver.Chrome()
@@ -101,8 +102,9 @@ class QWOPEnv(gym.Env):
 
         # Hold down current key
         for char in keys:
-            self.keyboard.press(char)
-            self.pressed_keys.add(char)
+            if self.evoke_actions:
+                self.keyboard.press(char)
+                self.pressed_keys.add(char)
 
         time.sleep(PRESS_DURATION)
 

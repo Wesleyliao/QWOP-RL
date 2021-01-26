@@ -3,6 +3,7 @@ import tensorflow as tf
 from stable_baselines import ACER
 
 from game.env import QWOPEnv
+from pretrain import recorder
 
 TRAIN_TIME_STEPS = 100000
 MODEL_PATH = "models/ACER_MLP_v2"
@@ -55,16 +56,31 @@ def run_test():
         obs, rewards, dones, info = env.step(action)
 
 
+def run_record():
+
+    env = QWOPEnv()
+    recorder.generate_obs(env)
+
+
 @click.command()
 @click.option('--train', default=False, is_flag=True, help='Run training')
 @click.option('--test', default=False, is_flag=True, help='Run test')
-def main(train, test):
+@click.option(
+    '--pretrain_record',
+    default=False,
+    is_flag=True,
+    help='Record observations for pretraining',
+)
+def main(train, pretrain_record, test):
     """Train and test an agent for QWOP."""
 
     if train:
         run_train()
     if test:
         run_test()
+
+    if pretrain_record:
+        run_record()
 
     if not test and not train:
         with click.Context(main) as ctx:
