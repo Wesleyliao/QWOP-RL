@@ -29,7 +29,7 @@ def define_model():
         'MlpPolicy',
         env,
         policy_kwargs=policy_kwargs,
-        n_cpu_tf_sess=5,
+        # n_cpu_tf_sess=5,
         replay_start=40,
         verbose=1,
     )
