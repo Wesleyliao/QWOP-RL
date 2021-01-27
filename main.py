@@ -33,22 +33,13 @@ def define_model():
     return model
 
 
-def run_train():
+def run_train(model_path=MODEL_PATH):
 
-    model = define_model()
-
-    # Train and save
-    model.learn(total_timesteps=TRAIN_TIME_STEPS)
-    model.save(MODEL_PATH)
-
-
-def continue_learning():
-
-    env = QWOPEnv()
-
-    # Load model
-    model = ACER.load(MODEL_PATH)
-    model.set_env(env)
+    if os.path.isfile(model_path + '.zip'):
+        print('Training frome existing model', model_path)
+        model = ACER.load(model_path)
+    else:
+        model = define_model()
 
     # Train and save
     model.learn(total_timesteps=TRAIN_TIME_STEPS)
@@ -73,7 +64,12 @@ def run_test():
 
 
 @click.command()
-@click.option('--train', default=False, is_flag=True, help='Run training')
+@click.option(
+    '--train',
+    default=False,
+    is_flag=True,
+    help='Run training; will train from existing model if path exists',
+)
 @click.option('--test', default=False, is_flag=True, help='Run test')
 @click.option(
     '--record',
@@ -82,7 +78,10 @@ def run_test():
     help='Record observations for pretraining',
 )
 @click.option(
-    '--imitate', default=False, is_flag=True, help='Train agent from recordings'
+    '--imitate',
+    default=False,
+    is_flag=True,
+    help='Train agent from recordings; will use existing model if path exists',
 )
 def main(train, test, record, imitate):
     """Train and test an agent for QWOP."""
