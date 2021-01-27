@@ -1,0 +1,16 @@
+numpy
+pandas
+opencv-python
+torch
+gym
+box2d
+matplotlib
+make
+atari-py
+pygame
+selenium
+pynput
+pre-commit
+stable-baselines
+click
+mpi4py

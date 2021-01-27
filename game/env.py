@@ -8,6 +8,11 @@ from pynput.keyboard import Key
 from selenium import webdriver
 from stable_baselines.common.env_checker import check_env
 
+from selenium.webdriver.chrome.options import Options
+options = Options()
+options.binary_location = "C:/Program Files/Google/Chrome/Application/chrome1.exe"
+driver = webdriver.Chrome(chrome_options=options)
+
 PORT = 8000
 PRESS_DURATION = 0.2
 STATE_SPACE_N = 71
@@ -47,7 +52,8 @@ class QWOPEnv(gym.Env):
         self.evoke_actions = True
 
         # Open browser and go to QWOP page
-        self.driver = webdriver.Chrome()
+        # self.driver = webdriver.Chrome()
+        self.driver = webdriver.Chrome(chrome_options=options)
         self.driver.get(f'http://localhost:{PORT}/Athletics.html')
 
         # Wait a bit and then start game
