@@ -11,7 +11,7 @@ from stable_baselines.common.env_checker import check_env
 from selenium.webdriver.chrome.options import Options
 options = Options()
 options.binary_location = "C:/Program Files/Google/Chrome/Application/chrome1.exe"
-driver = webdriver.Chrome(chrome_options=options)
+# driver = webdriver.Chrome(chrome_options=options)
 
 PORT = 8000
 PRESS_DURATION = 0.2

@@ -10,9 +10,9 @@ from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
-TRAIN_TIME_STEPS = 20
+TRAIN_TIME_STEPS = 2000000
 RECORD_PATH = os.path.join('pretrain', 'human_try1')
-MODEL_PATH = os.path.join('models', 'ACER_MLP_V3')
+MODEL_PATH = os.path.join('models', 'ACER_MLP_V4')
 
 
 checkpoint_callback = CheckpointCallback(save_freq=TRAIN_TIME_STEPS/10, save_path='./logs/',
