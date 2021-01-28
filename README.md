@@ -7,20 +7,20 @@ Training a reinforcement learning agent to play QWOP.
 ## Instructions
 
 Install Python 3.7
+
 ```
-conda create -n py37 python=3.7 anaconda
+conda create -n py37 python=3.7
 conda activate py37
 ```
 
 Install dependencies
 
 ```
-pip install pipenv
-pipenv install
-pipenv shell
+pip install -r requirements.txt
 ```
 
-Install [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home) for interacting with Chrome through Selenium. Then, start HTTP server for the game
+Install [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home) for
+interacting with Chrome through Selenium. Then, start HTTP server for the game
 
 ```
 python host_game.py

@@ -36,7 +36,7 @@ def define_model():
 def run_train(model_path=MODEL_PATH):
 
     if os.path.isfile(model_path + '.zip'):
-        print('Training frome existing model', model_path)
+        print('Training from existing model', model_path)
         model = ACER.load(model_path)
     else:
         model = define_model()

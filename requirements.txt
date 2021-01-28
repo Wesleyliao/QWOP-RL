@@ -1,0 +1,13 @@
+numpy
+pandas
+gym
+box2d
+matplotlib
+make
+selenium
+pynput
+pre-commit
+stable-baselines
+tensorflow==1.14.0
+click
+mpi4py
