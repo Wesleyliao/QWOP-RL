@@ -4,14 +4,20 @@ import time
 import click
 import tensorflow as tf
 from stable_baselines import ACER
+from stable_baselines.common.callbacks import CheckpointCallback
 
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
+MODEL_NAME = 'ACER_MLP_V3'
 TRAIN_TIME_STEPS = 100000
 RECORD_PATH = os.path.join('pretrain', 'human_try1')
-MODEL_PATH = os.path.join('models', 'ACER_MLP_V3')
+MODEL_PATH = os.path.join('models', MODEL_NAME)
+
+checkpoint_callback = CheckpointCallback(
+    save_freq=TRAIN_TIME_STEPS / 10, save_path='./logs/', name_prefix=MODEL_NAME
+)
 
 
 def define_model():
@@ -25,7 +31,6 @@ def define_model():
         'MlpPolicy',
         env,
         policy_kwargs=policy_kwargs,
-        n_cpu_tf_sess=5,
         replay_start=40,
         verbose=1,
     )
@@ -42,8 +47,12 @@ def run_train(model_path=MODEL_PATH):
         model = define_model()
 
     # Train and save
-    model.learn(total_timesteps=TRAIN_TIME_STEPS)
+    t = time.time()
+
+    model.learn(total_timesteps=TRAIN_TIME_STEPS, callback=checkpoint_callback)
     model.save(MODEL_PATH)
+
+    print(f"Trained {TRAIN_TIME_STEPS} steps in {time.time()-t} seconds.")
 
 
 def run_test():
