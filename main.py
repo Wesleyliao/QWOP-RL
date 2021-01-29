@@ -5,13 +5,14 @@ import click
 import tensorflow as tf
 from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
+from stable_baselines.common.vec_env import SubprocVecEnv
 
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
 MODEL_NAME = 'ACER_MLP_V3'
-TRAIN_TIME_STEPS = 100000
+TRAIN_TIME_STEPS = 150000
 RECORD_PATH = os.path.join('pretrain', 'human_try1')
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 
@@ -41,8 +42,10 @@ def define_model():
 def run_train(model_path=MODEL_PATH):
 
     if os.path.isfile(model_path + '.zip'):
-        print('Training from existing model', model_path)
+        print('--- Training from existing model', model_path, '---')
         model = ACER.load(model_path)
+        env = SubprocVecEnv([lambda: QWOPEnv()])
+        model.set_env(env)
     else:
         model = define_model()
 

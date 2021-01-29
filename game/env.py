@@ -39,6 +39,7 @@ class QWOPEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=-np.inf, high=np.inf, shape=[STATE_SPACE_N], dtype=np.float32
         )
+        self.num_envs = 1
 
         # QWOP specific stuff
         self.gameover = False
