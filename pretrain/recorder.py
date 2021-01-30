@@ -52,7 +52,7 @@ def human_expert(_obs):
     raise ValueError(f'Key presses not found {string}')
 
 
-def generate_obs(environment, record_path):
+def generate_obs(environment, record_path, n_episodes=5):
     global env
     env = environment
-    generate_expert_traj(human_expert, record_path, env, n_episodes=5)
+    generate_expert_traj(human_expert, record_path, env, n_episodes=n_episodes)

@@ -11,17 +11,23 @@ from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
-MODEL_NAME = 'ACER_MLP_V3'
+# Training parameters
+MODEL_NAME = 'HUMAN_TRAINED_RUN_v0'
 TRAIN_TIME_STEPS = 150000
-RECORD_PATH = os.path.join('pretrain', 'human_try1')
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 
+# Checkpoint callback
 checkpoint_callback = CheckpointCallback(
     save_freq=TRAIN_TIME_STEPS / 10, save_path='./logs/', name_prefix=MODEL_NAME
 )
 
+# Imitation learning parameters
+RECORD_PATH = os.path.join('pretrain', 'human_try5')
+N_EPISODES = 10
+N_EPOCHS = 200
 
-def define_model():
+
+def get_new_model():
 
     # Define policy network
     policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[256, 128])
@@ -39,15 +45,33 @@ def define_model():
     return model
 
 
-def run_train(model_path=MODEL_PATH):
+def get_existing_model(model_path):
+
+    print('--- Training from existing model', model_path, '---')
+
+    # Load model
+    model = ACER.load(model_path)
+
+    # Set environment
+    env = SubprocVecEnv([lambda: QWOPEnv()])
+    model.set_env(env)
+
+    return model
+
+
+def get_model(model_path):
 
     if os.path.isfile(model_path + '.zip'):
-        print('--- Training from existing model', model_path, '---')
-        model = ACER.load(model_path)
-        env = SubprocVecEnv([lambda: QWOPEnv()])
-        model.set_env(env)
+        model = get_existing_model(model_path)
     else:
-        model = define_model()
+        model = get_new_model()
+
+    return model
+
+
+def run_train(model_path=MODEL_PATH):
+
+    model = get_model(model_path)
 
     # Train and save
     t = time.time()
@@ -64,15 +88,19 @@ def run_test():
     env = QWOPEnv()
     model = ACER.load(MODEL_PATH)
 
-    # Run test
-    t = time.time()
-    done = False
-    obs = env.reset()
-    while not done:
-        action, _states = model.predict(obs)
-        obs, rewards, done, info = env.step(action)
+    for i in range(10):
 
-    input(f"Test run complete in {time.time()-t} seconds. Press Enter to exit.")
+        # Run test
+        t = time.time()
+        done = False
+        obs = env.reset()
+        while not done:
+            action, _states = model.predict(obs)
+            obs, rewards, done, info = env.step(action)
+
+        print(f"Test run complete: {env.previous_score} in {time.time()-t} seconds.")
+
+    input('Press Enter to exit.')
 
 
 @click.command()
@@ -105,11 +133,11 @@ def main(train, test, record, imitate):
 
     if record:
         env = QWOPEnv()
-        recorder.generate_obs(env, RECORD_PATH)
+        recorder.generate_obs(env, RECORD_PATH, N_EPISODES)
 
     if imitate:
-        model = define_model()
-        imitation_learning.imitate(model, RECORD_PATH, MODEL_PATH)
+        model = get_model(MODEL_PATH)
+        imitation_learning.imitate(model, RECORD_PATH, MODEL_PATH, N_EPOCHS)
 
     if not (test or train or record or imitate):
         with click.Context(main) as ctx:
