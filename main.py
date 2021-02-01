@@ -14,6 +14,7 @@ from pretrain import recorder
 # Training parameters
 MODEL_NAME = 'Self6hr_human50_self48hr'
 TRAIN_TIME_STEPS = 200000
+LEARNING_RATE = 7e-4 * (1 - 8 / 10)
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -71,9 +72,10 @@ def get_model(model_path):
     return model
 
 
-def run_train(model_path=MODEL_PATH):
+def run_train(model_path=MODEL_PATH, learning_rate=LEARNING_RATE):
 
     model = get_model(model_path)
+    model.learning_rate = learning_rate
 
     # Train and save
     t = time.time()
