@@ -18,7 +18,7 @@ MODEL_PATH = os.path.join('models', MODEL_NAME)
 
 # Checkpoint callback
 checkpoint_callback = CheckpointCallback(
-    save_freq=TRAIN_TIME_STEPS / 10, save_path='./logs/', name_prefix=MODEL_NAME
+    save_freq=100000, save_path='./logs/', name_prefix=MODEL_NAME
 )
 
 # Imitation learning parameters
