@@ -15,6 +15,7 @@ from pretrain import recorder
 MODEL_NAME = 'Self6hr_human50_self48hr'
 TRAIN_TIME_STEPS = 200000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
+TENSORBOARD_PATH = './tensorboard/'
 
 # Checkpoint callback
 checkpoint_callback = CheckpointCallback(
@@ -40,6 +41,7 @@ def get_new_model():
         policy_kwargs=policy_kwargs,
         replay_start=40,
         verbose=1,
+        tensorboard_log=TENSORBOARD_PATH,
     )
 
     return model
@@ -50,7 +52,7 @@ def get_existing_model(model_path):
     print('--- Training from existing model', model_path, '---')
 
     # Load model
-    model = ACER.load(model_path)
+    model = ACER.load(model_path, tensorboard_log=TENSORBOARD_PATH)
 
     # Set environment
     env = SubprocVecEnv([lambda: QWOPEnv()])
@@ -76,7 +78,11 @@ def run_train(model_path=MODEL_PATH):
     # Train and save
     t = time.time()
 
-    model.learn(total_timesteps=TRAIN_TIME_STEPS, callback=checkpoint_callback)
+    model.learn(
+        total_timesteps=TRAIN_TIME_STEPS,
+        callback=checkpoint_callback,
+        reset_num_timesteps=False,
+    )
     model.save(MODEL_PATH)
 
     print(f"Trained {TRAIN_TIME_STEPS} steps in {time.time()-t} seconds.")
