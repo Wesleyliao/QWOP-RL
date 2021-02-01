@@ -82,7 +82,9 @@ class QWOPEnv(gym.Env):
         #     reward = game_state['score'] / game_state['scoreTime'] * 1000
         # else:
         #     reward = game_state['score'] - self.previous_score
+
         reward = game_state['score'] - self.previous_score
+
         # Update previous scores
         self.previous_score = game_state['score']
         self.previous_time = game_state['scoreTime']
@@ -113,6 +115,8 @@ class QWOPEnv(gym.Env):
         # Send 'R' key press to restart game
         self.send_keys(['r', Key.space])
         self.gameover = False
+        self.previous_score = 0
+        self.previous_time = 0
         self._release_all_keys_()
 
         return self._get_state_()[0]
