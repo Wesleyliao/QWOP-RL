@@ -12,8 +12,8 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50'
-TRAIN_TIME_STEPS = 1000000
+MODEL_NAME = 'Self6hr_human50_self48hr'
+TRAIN_TIME_STEPS = 800000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 
 # Checkpoint callback

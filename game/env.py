@@ -78,11 +78,11 @@ class QWOPEnv(gym.Env):
         state = np.array(state)
 
         # Get reward
-        if done and game_state['score'] > 100:
-            reward = game_state['score'] / game_state['scoreTime'] * 1000
-        else:
-            reward = game_state['score'] - self.previous_score
-
+        # if done and game_state['score'] > 100:
+        #     reward = game_state['score'] / game_state['scoreTime'] * 1000
+        # else:
+        #     reward = game_state['score'] - self.previous_score
+        reward = game_state['score'] - self.previous_score
         # Update previous scores
         self.previous_score = game_state['score']
         self.previous_time = game_state['scoreTime']
