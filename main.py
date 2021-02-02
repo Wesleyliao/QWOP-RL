@@ -106,7 +106,13 @@ def run_test():
             action, _states = model.predict(obs)
             obs, rewards, done, info = env.step(action)
 
-        print(f"Test run complete: {env.previous_score} in {time.time()-t} seconds.")
+        print(
+            "Test run complete: {:10.1f} in {:10.1f} seconds. Velocity {:10.2f}".format(
+                env.previous_score,
+                time.time() - t,
+                env.previous_score / (time.time() - t),
+            )
+        )
 
     input('Press Enter to exit.')
 
