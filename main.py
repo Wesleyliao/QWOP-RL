@@ -107,7 +107,7 @@ def run_test():
             obs, rewards, done, info = env.step(action)
 
         print(
-            "Test run complete: {:10.1f} in {:10.1f} seconds. Velocity {:10.2f}".format(
+            "Test run complete: {:3.1f} in {:3.1f} seconds. Velocity {:1.2f}".format(
                 env.previous_score,
                 time.time() - t,
                 env.previous_score / (time.time() - t),
