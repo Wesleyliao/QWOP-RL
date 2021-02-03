@@ -83,7 +83,7 @@ class QWOPEnv(gym.Env):
         # else:
         #     reward = game_state['score'] - self.previous_score
 
-        reward = game_state['score'] - self.previous_score
+        reward = max(game_state['score'] - self.previous_score, 0)
 
         # Update previous scores
         self.previous_score = game_state['score']
