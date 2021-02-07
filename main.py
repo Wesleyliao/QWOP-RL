@@ -12,9 +12,9 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50_self48hr'
-TRAIN_TIME_STEPS = 150000
-LEARNING_RATE = 7e-4 * 1 / 200
+MODEL_NAME = 'Self6hr_human50_self48hr_running'
+TRAIN_TIME_STEPS = 1000000
+LEARNING_RATE = 7e-4 * (1 / 200)
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -41,6 +41,8 @@ def get_new_model():
         env,
         policy_kwargs=policy_kwargs,
         verbose=1,
+        replay_start=10000,
+        buffer_size=20000,
         tensorboard_log=TENSORBOARD_PATH,
     )
 
@@ -106,7 +108,7 @@ def run_test():
             obs, rewards, done, info = env.step(action)
 
         print(
-            "Test run complete: {:3.1f} in {:3.1f} seconds. Velocity {:1.2f}".format(
+            "Test run complete: {:4.1f} in {:4.1f} seconds. Velocity {:2.2f}".format(
                 env.previous_score,
                 time.time() - t,
                 env.previous_score / (time.time() - t),
