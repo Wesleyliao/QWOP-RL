@@ -10,6 +10,7 @@ from stable_baselines.common.env_checker import check_env
 
 PORT = 8000
 PRESS_DURATION = 0.2
+MAX_EPISODE_DURATION_SECS = 120
 STATE_SPACE_N = 71
 ACTIONS = {
     0: 'qw',
@@ -66,7 +67,11 @@ class QWOPEnv(gym.Env):
         body_state = self._get_variable_('globalbodystate')
 
         # Get done
-        if game_state['gameEnded'] + game_state['gameOver'] > 0:
+        if (
+            (game_state['gameEnded'] > 0)
+            or (game_state['gameOver'] > 0)
+            or (game_state['scoreTime'] > MAX_EPISODE_DURATION_SECS)
+        ):
             self.gameover = done = True
         else:
             self.gameover = done = False
