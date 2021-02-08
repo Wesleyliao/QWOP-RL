@@ -112,7 +112,7 @@ def run_test():
                 env.previous_score / (time.time() - t),
             )
         )
-
+        time.sleep(3)
     input('Press Enter to exit.')
 
 
