@@ -12,8 +12,8 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50_self84hr'
-TRAIN_TIME_STEPS = 1000000
+MODEL_NAME = 'Self6hr_human50_self102hr'
+TRAIN_TIME_STEPS = 300000
 LEARNING_RATE = 7e-4 * (1 / 200)
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
