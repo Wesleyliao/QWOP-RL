@@ -5,3 +5,4 @@ tensorflow==1.14.0
 selenium==3.141.0
 pynput==1.7.2
 stable_baselines==2.10.1
+pre-commit==2.10.1
