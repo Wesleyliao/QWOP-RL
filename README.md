@@ -2,9 +2,9 @@
 
 ## Description
 
-Training a reinforcement learning agent to play QWOP.
+Train an AI agent to play QWOP using reinforcement learning and imitation learning.
 
-## Instructions
+## Setup
 
 Install Python 3.7
 
@@ -19,6 +19,12 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
+Install Windows-specific dependencies if on Windows
+
+```
+conda install -c intel mpi4py
+```
+
 Install [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home) for
 interacting with Chrome through Selenium. Then, start HTTP server for the game
 
@@ -26,7 +32,9 @@ interacting with Chrome through Selenium. Then, start HTTP server for the game
 python host_game.py
 ```
 
-Train agent (optional)
+## Train and test
+
+Train agent
 
 ```
 python main.py --train
@@ -38,7 +46,31 @@ Test agent
 python main.py --test
 ```
 
-To save or use new models, the constant `MODEL_PATH` in `main.py`.
+To save or use new models, the constant `MODEL_PATH` in `main.py`. Note that the agent
+plays the game in real-time, so differences in latency between training and testing
+computer will affect performance.
+
+## Imitation learning
+
+Record games using human input
+
+```
+python main.py --record
+```
+
+Train agent from recorded games
+
+```
+python main.py --imitate
+```
+
+## Tensorboard
+
+Track training performance live or view metrics previous sessions
+
+```
+tensorboard --logdir ./tensorboard/
+```
 
 ## Acknowledgements
 
