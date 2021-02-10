@@ -1,8 +1,11 @@
+import os
 import time
 
+from stable_baselines import ACER
 from stable_baselines.gail import generate_expert_traj
 
 env = None
+model = None
 
 MAPPING = {
     'qw': 0,
@@ -52,7 +55,24 @@ def human_expert(_obs):
     raise ValueError(f'Key presses not found {string}')
 
 
+def get_existing_model(model_path):
+
+    print('--- Training from existing model', model_path, '---')
+
+    # Load model
+    model = ACER.load(model_path)
+
+    return model
+
+
+def acer_expert(_obs):
+    global model
+    action, _states = model.predict(_obs)
+    return action
+
+
 def generate_obs(environment, record_path, n_episodes=5):
-    global env
+    global env, model
     env = environment
-    generate_expert_traj(human_expert, record_path, env, n_episodes=n_episodes)
+    model = get_existing_model(os.path.join('models', 'Self6hr_human50_self114hr'))
+    generate_expert_traj(acer_expert, record_path, env, n_episodes=n_episodes)
