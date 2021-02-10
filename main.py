@@ -12,9 +12,12 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50_self102hr'
-TRAIN_TIME_STEPS = 300000
-LEARNING_RATE = 7e-4 * (1 / 200)
+MODEL_NAME = 'Self6hr_human50_self114hr'
+TRAIN_TIME_STEPS = 200000
+REPLAY_START = 10000000000
+BUFFER_SIZE = 15000
+REPLAY_RATIO = 0  # pure on-policy
+LEARNING_RATE = 7e-4 * (1 / 150)
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -71,10 +74,13 @@ def get_model(model_path):
     return model
 
 
-def run_train(model_path=MODEL_PATH, learning_rate=LEARNING_RATE):
+def run_train(model_path=MODEL_PATH):
 
     model = get_model(model_path)
-    model.learning_rate = learning_rate
+    model.learning_rate = LEARNING_RATE
+    model.buffer_size = BUFFER_SIZE
+    model.replay_start = REPLAY_START
+    model.replay_ratio = REPLAY_RATIO
 
     # Train and save
     t = time.time()
@@ -95,7 +101,11 @@ def run_test():
     env = QWOPEnv()
     model = ACER.load(MODEL_PATH)
 
-    for i in range(10):
+    input('Press Enter to start.')
+
+    time.sleep(1)
+
+    for _ in range(100):
 
         # Run test
         t = time.time()
@@ -112,7 +122,13 @@ def run_test():
                 env.previous_score / (time.time() - t),
             )
         )
-        time.sleep(3)
+
+        time.sleep(1)
+
+        # Admire the finish
+        if env.previous_score >= 100:
+            time.sleep(5)
+
     input('Press Enter to exit.')
 
 
