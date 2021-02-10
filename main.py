@@ -17,6 +17,8 @@ LEARNING_STARTS = 1000
 EXPLORATION_INITIAL_EPS = 0.5
 EXPLORATION_FINAL_EPS = 0.02
 TRAIN_TIME_STEPS = 20
+BUFFER_SIZE = 50000
+BATCH_SIZE = 32
 
 LEARNING_RATE = 0.0005
 MODEL_PATH = os.path.join('models', MODEL_NAME)
@@ -36,19 +38,20 @@ N_EPOCHS = 200
 class CustomDQNPolicy(FeedForwardPolicy):
     def __init__(self, *args, **kwargs):
         super(CustomDQNPolicy, self).__init__(
-            *args, **kwargs, layers=[64], layer_norm=True, feature_extraction="mlp"
+            *args,
+            **kwargs,
+            layers=[256, 128],
+            layer_norm=True,
+            feature_extraction="mlp",
         )
 
 
 def get_new_model():
 
-    # Define policy network
-    # policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[256, 128])
-
     # Initialize env and model
     env = QWOPEnv()
     model = DQN(
-        'MlpPolicy',
+        CustomDQNPolicy,
         env,
         prioritized_replay=True,
         verbose=1,
@@ -89,6 +92,8 @@ def run_train(model_path=MODEL_PATH):
     model.learning_starts = LEARNING_STARTS
     model.exploration_initial_eps = EXPLORATION_INITIAL_EPS
     model.exploration_final_eps = EXPLORATION_FINAL_EPS
+    model.buffer_size = BUFFER_SIZE
+    model.batch_size = BATCH_SIZE
 
     # Train and save
     t = time.time()
