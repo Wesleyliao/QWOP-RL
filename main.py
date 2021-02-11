@@ -30,8 +30,8 @@ checkpoint_callback = CheckpointCallback(
 )
 
 # Imitation learning parameters
-RECORD_PATH = os.path.join('pretrain', 'acer_try1')
-N_EPISODES = 10
+RECORD_PATH = os.path.join('pretrain', 'acer_114hr_100episodes')
+N_EPISODES = 100
 N_EPOCHS = 200
 
 
