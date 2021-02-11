@@ -12,15 +12,15 @@ from pretrain import recorder
 
 # Training parameters
 MODEL_NAME = 'DQN_imitateACER'
-EXPLORATION_FRACTION = 0.1
+EXPLORATION_FRACTION = 0.2
 LEARNING_STARTS = 1000
-EXPLORATION_INITIAL_EPS = 0.5
-EXPLORATION_FINAL_EPS = 0.02
-TRAIN_TIME_STEPS = 20
+EXPLORATION_INITIAL_EPS = 0.01
+EXPLORATION_FINAL_EPS = 0.01
 BUFFER_SIZE = 50000
 BATCH_SIZE = 32
-
-LEARNING_RATE = 0.0005
+TRAIN_FREQ = 4
+LEARNING_RATE = 0.000002
+TRAIN_TIME_STEPS = 200000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -94,6 +94,7 @@ def run_train(model_path=MODEL_PATH):
     model.exploration_final_eps = EXPLORATION_FINAL_EPS
     model.buffer_size = BUFFER_SIZE
     model.batch_size = BATCH_SIZE
+    model.train_freq = TRAIN_FREQ
 
     # Train and save
     t = time.time()
