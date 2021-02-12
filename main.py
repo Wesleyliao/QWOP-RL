@@ -12,8 +12,8 @@ from pretrain import recorder
 
 # Training parameters
 MODEL_NAME = 'PPO2_imitateACER'
-
-TRAIN_TIME_STEPS = 5
+LEARNING_RATE = 0.00025 * (1 / 30)
+TRAIN_TIME_STEPS = 200000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -69,6 +69,7 @@ def get_model(model_path):
 def run_train(model_path=MODEL_PATH):
 
     model = get_model(model_path)
+    model.learning_rate = LEARNING_RATE
 
     # Train and save
     t = time.time()
