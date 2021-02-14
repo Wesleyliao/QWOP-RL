@@ -12,12 +12,13 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50_self102hr'
-TRAIN_TIME_STEPS = 200000
-REPLAY_START = 10000000000
+MODEL_NAME = 'Self6hr_human50_self132hr'
+TRAIN_TIME_STEPS = 800000
+REPLAY_START = 500000000
 BUFFER_SIZE = 15000
 REPLAY_RATIO = 0  # pure on-policy
-LEARNING_RATE = 7e-4 * (1 / 150)
+LEARNING_RATE = 7e-4 * (1 / 120)
+LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -81,6 +82,7 @@ def run_train(model_path=MODEL_PATH):
     model.buffer_size = BUFFER_SIZE
     model.replay_start = REPLAY_START
     model.replay_ratio = REPLAY_RATIO
+    model.lr_schedule = LR_SCHEDULE
 
     # Train and save
     t = time.time()
