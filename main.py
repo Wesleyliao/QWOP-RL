@@ -2,7 +2,8 @@ import os
 import time
 
 import click
-from stable_baselines import PPO2
+import tensorflow as tf
+from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
 from stable_baselines.common.vec_env import SubprocVecEnv
 
@@ -11,9 +12,13 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'PPO2_imitateACER'
-LEARNING_RATE = 0.00025 * (1 / 30)
-TRAIN_TIME_STEPS = 200000
+MODEL_NAME = 'NewAcer_imitate'
+TRAIN_TIME_STEPS = 100000 * 10
+REPLAY_START = 50000
+BUFFER_SIZE = 5000
+REPLAY_RATIO = 4  # pure on-policy
+LEARNING_RATE = 7e-4 * (1 / 10)
+LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -24,17 +29,21 @@ checkpoint_callback = CheckpointCallback(
 
 # Imitation learning parameters
 RECORD_PATH = os.path.join('pretrain', 'acer_114hr_100episodes')
-N_EPISODES = 100
+N_EPISODES = 10
 N_EPOCHS = 200
 
 
 def get_new_model():
 
+    # Define policy network
+    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[512, 256])
+
     # Initialize env and model
     env = QWOPEnv()
-    model = PPO2(
+    model = ACER(
         'MlpPolicy',
         env,
+        policy_kwargs=policy_kwargs,
         verbose=1,
         tensorboard_log=TENSORBOARD_PATH,
     )
@@ -47,7 +56,7 @@ def get_existing_model(model_path):
     print('--- Training from existing model', model_path, '---')
 
     # Load model
-    model = PPO2.load(model_path, tensorboard_log=TENSORBOARD_PATH)
+    model = ACER.load(model_path, tensorboard_log=TENSORBOARD_PATH)
 
     # Set environment
     env = SubprocVecEnv([lambda: QWOPEnv()])
@@ -70,6 +79,10 @@ def run_train(model_path=MODEL_PATH):
 
     model = get_model(model_path)
     model.learning_rate = LEARNING_RATE
+    model.buffer_size = BUFFER_SIZE
+    model.replay_start = REPLAY_START
+    model.replay_ratio = REPLAY_RATIO
+    model.lr_schedule = LR_SCHEDULE
 
     # Train and save
     t = time.time()
@@ -88,7 +101,7 @@ def run_test():
 
     # Initialize env and model
     env = QWOPEnv()
-    model = PPO2.load(MODEL_PATH)
+    model = ACER.load(MODEL_PATH)
 
     input('Press Enter to start.')
 
@@ -101,7 +114,7 @@ def run_test():
         done = False
         obs = env.reset()
         while not done:
-            action, _states = model.predict(obs)
+            action, _states = model.predict(obs, deterministic=True)
             obs, rewards, done, info = env.step(action)
 
         print(

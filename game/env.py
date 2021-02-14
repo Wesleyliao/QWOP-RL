@@ -9,7 +9,7 @@ from selenium import webdriver
 from stable_baselines.common.env_checker import check_env
 
 PORT = 8000
-PRESS_DURATION = 0.2
+PRESS_DURATION = 0.1
 MAX_EPISODE_DURATION_SECS = 120
 STATE_SPACE_N = 71
 ACTIONS = {
