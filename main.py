@@ -17,7 +17,7 @@ TRAIN_TIME_STEPS = 100000 * 10
 REPLAY_START = 50000
 BUFFER_SIZE = 5000
 REPLAY_RATIO = 4  # pure on-policy
-LEARNING_RATE = 7e-4 * (1 / 10)
+LEARNING_RATE = 7e-4 * (1 / 80)
 LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
@@ -30,7 +30,7 @@ checkpoint_callback = CheckpointCallback(
 # Imitation learning parameters
 RECORD_PATH = os.path.join('pretrain', 'acer_114hr_100episodes')
 N_EPISODES = 10
-N_EPOCHS = 200
+N_EPOCHS = 100
 
 
 def get_new_model():
