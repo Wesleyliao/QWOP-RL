@@ -4,7 +4,7 @@
 
 Train an AI agent to play QWOP using reinforcement learning and imitation learning.
 
-![alt text](img/main.gif "Title")
+![image](img/main.gif)
 
 ## Setup
 
