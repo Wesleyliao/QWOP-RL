@@ -98,7 +98,7 @@ class QWOPEnv(gym.Env):
         if torso_y > 0:
             reward -= torso_y / 5
 
-        print(reward)
+        # print(reward)
 
         # Update previous scores
         self.previous_torso_x = torso_x

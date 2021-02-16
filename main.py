@@ -12,12 +12,12 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'NewAcer_imitate'
-TRAIN_TIME_STEPS = 100000 * 10
-REPLAY_START = 50000
-BUFFER_SIZE = 5000
-REPLAY_RATIO = 2  # pure on-policy
-LEARNING_RATE = 7e-4 * (1 / 180)
+MODEL_NAME = 'NewAcer_imitate_400k'
+TRAIN_TIME_STEPS = 100000 * 4
+REPLAY_START = 10000
+BUFFER_SIZE = 15000
+REPLAY_RATIO = 4  # pure on-policy
+LEARNING_RATE = 7e-4 * (1 / 10)
 LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
