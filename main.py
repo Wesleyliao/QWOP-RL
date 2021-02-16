@@ -7,6 +7,7 @@ from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
 from stable_baselines.common.vec_env import SubprocVecEnv
 
+from game.env import ACTIONS
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
@@ -97,6 +98,26 @@ def run_train(model_path=MODEL_PATH):
     print(f"Trained {TRAIN_TIME_STEPS} steps in {time.time()-t} seconds.")
 
 
+def print_probs(model, obs):
+
+    # Print action probabilities
+    probs = model.action_probability(obs)
+    topa = sorted(
+        [(prob, kv[1]) for kv, prob in zip(ACTIONS.items(), probs)],
+        reverse=True,
+    )[:3]
+    print(
+        'Top 3 actions - {}: {:3.0f}%, {}: {:3.0f}%, {}: {:3.0f}%'.format(
+            topa[0][1],
+            topa[0][0] * 100,
+            topa[1][1],
+            topa[1][0] * 100,
+            topa[2][1],
+            topa[2][0] * 100,
+        )
+    )
+
+
 def run_test():
 
     # Initialize env and model
@@ -114,7 +135,9 @@ def run_test():
         done = False
         obs = env.reset()
         while not done:
-            action, _states = model.predict(obs, deterministic=True)
+
+            action, _states = model.predict(obs, deterministic=False)
+            # print_probs(model, obs)
             obs, rewards, done, info = env.step(action)
 
         print(
