@@ -12,7 +12,7 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50_self132hr'
+MODEL_NAME = 'Self6hr_human50_self102hr'
 TRAIN_TIME_STEPS = 800000
 REPLAY_START = 500000000
 BUFFER_SIZE = 15000
@@ -114,7 +114,7 @@ def run_test():
         done = False
         obs = env.reset()
         while not done:
-            action, _states = model.predict(obs, deterministic=True)
+            action, _states = model.predict(obs, deterministic=False)
             obs, rewards, done, info = env.step(action)
 
         print(
