@@ -47,6 +47,7 @@ class QWOPEnv(gym.Env):
         self.previous_score = 0
         self.previous_time = 0
         self.previous_torso_x = 0
+        self.previous_torso_y = 0
         self.evoke_actions = True
 
         # Open browser and go to QWOP page
@@ -92,16 +93,27 @@ class QWOPEnv(gym.Env):
         torso_x = body_state['torso']['position_x']
         torso_y = body_state['torso']['position_y']
 
-        reward = max(torso_x - self.previous_torso_x, 0)
+        reward1 = max(torso_x - self.previous_torso_x, 0)
 
         # Penalize for low torso
         if torso_y > 0:
-            reward -= torso_y / 5
+            reward2 = -torso_y / 5
+        else:
+            reward2 = 0
 
-        # print(reward)
+        # Penalize for torso vertical velocity
+        reward3 = -abs(torso_y - self.previous_torso_y) / 5
+
+        # Combine rewards
+        # print('Rewards: {:3.1f}, {:3.1f}, {:3.1f}'.format(
+        #     reward1, reward2, reward3
+        # ))
+
+        reward = reward1 + reward2 + reward3
 
         # Update previous scores
         self.previous_torso_x = torso_x
+        self.previous_torso_y = torso_y
         self.previous_score = game_state['score']
         self.previous_time = game_state['scoreTime']
 
@@ -134,6 +146,7 @@ class QWOPEnv(gym.Env):
         self.previous_score = 0
         self.previous_time = 0
         self.previous_torso_x = 0
+        self.previous_torso_y = 0
         self._release_all_keys_()
 
         return self._get_state_()[0]

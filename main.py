@@ -12,7 +12,7 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'NewAcer_imitate_400k'
+MODEL_NAME = 'NewAcer_imitate_12hr'
 TRAIN_TIME_STEPS = 100000 * 4
 REPLAY_START = 10000
 BUFFER_SIZE = 15000
