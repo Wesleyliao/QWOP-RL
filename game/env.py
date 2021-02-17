@@ -78,21 +78,11 @@ class QWOPEnv(gym.Env):
         else:
             self.gameover = done = False
 
-        # Get body state
-        state = []
-        for part in body_state.values():
-            state = state + list(part.values())
-        state = np.array(state)
-
         # Get reward
-        # if done and game_state['score'] > 100:
-        #     reward = game_state['score'] / game_state['scoreTime'] * 1000
-        # else:
-        #     reward = game_state['score'] - self.previous_score
-
         torso_x = body_state['torso']['position_x']
         torso_y = body_state['torso']['position_y']
 
+        # Reward for moving forward
         reward1 = max(torso_x - self.previous_torso_x, 0)
 
         # Penalize for low torso
@@ -105,17 +95,34 @@ class QWOPEnv(gym.Env):
         reward3 = -abs(torso_y - self.previous_torso_y) / 5
 
         # Combine rewards
+        reward = reward1 + reward2 + reward3
+
         # print('Rewards: {:3.1f}, {:3.1f}, {:3.1f}'.format(
         #     reward1, reward2, reward3
         # ))
-
-        reward = reward1 + reward2 + reward3
 
         # Update previous scores
         self.previous_torso_x = torso_x
         self.previous_torso_y = torso_y
         self.previous_score = game_state['score']
         self.previous_time = game_state['scoreTime']
+
+        # Normalize torso_x
+        for part, values in body_state.items():
+            if 'position_x' in values:
+                values['position_x'] -= torso_x
+
+        # print('Positions: {:3.1f}, {:3.1f}, {:3.1f}'.format(
+        #     body_state['torso']['position_x'],
+        #     body_state['leftThigh']['position_x'],
+        #     body_state['rightCalf']['position_x']
+        # ))
+
+        # Convert body state
+        state = []
+        for part in body_state.values():
+            state = state + list(part.values())
+        state = np.array(state)
 
         return state, reward, done, {}
 
