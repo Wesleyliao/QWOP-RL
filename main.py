@@ -7,18 +7,19 @@ from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
 from stable_baselines.common.vec_env import SubprocVecEnv
 
+from game.env import ACTIONS
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'Self6hr_human50_self102hr'
-TRAIN_TIME_STEPS = 800000
-REPLAY_START = 500000000
+MODEL_NAME = 'NewAcer_imitate_21hr'
+TRAIN_TIME_STEPS = 100000 * 3
+REPLAY_START = 5000
 BUFFER_SIZE = 15000
-REPLAY_RATIO = 0  # pure on-policy
-LEARNING_RATE = 7e-4 * (1 / 120)
-LR_SCHEDULE = 'linear'
+REPLAY_RATIO = 6
+LEARNING_RATE = 7e-4 * (1 / 100)
+LR_SCHEDULE = 'double_middle_drop'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -28,15 +29,15 @@ checkpoint_callback = CheckpointCallback(
 )
 
 # Imitation learning parameters
-RECORD_PATH = os.path.join('pretrain', 'human_try5')
+RECORD_PATH = os.path.join('pretrain', 'acer_114hr_100episodes')
 N_EPISODES = 10
-N_EPOCHS = 200
+N_EPOCHS = 100
 
 
 def get_new_model():
 
     # Define policy network
-    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[256, 128])
+    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[512, 256])
 
     # Initialize env and model
     env = QWOPEnv()
@@ -97,6 +98,26 @@ def run_train(model_path=MODEL_PATH):
     print(f"Trained {TRAIN_TIME_STEPS} steps in {time.time()-t} seconds.")
 
 
+def print_probs(model, obs):
+
+    # Print action probabilities
+    probs = model.action_probability(obs)
+    topa = sorted(
+        [(prob, kv[1]) for kv, prob in zip(ACTIONS.items(), probs)],
+        reverse=True,
+    )[:3]
+    print(
+        'Top 3 actions - {}: {:3.0f}%, {}: {:3.0f}%, {}: {:3.0f}%'.format(
+            topa[0][1],
+            topa[0][0] * 100,
+            topa[1][1],
+            topa[1][0] * 100,
+            topa[2][1],
+            topa[2][0] * 100,
+        )
+    )
+
+
 def run_test():
 
     # Initialize env and model
@@ -114,7 +135,9 @@ def run_test():
         done = False
         obs = env.reset()
         while not done:
+
             action, _states = model.predict(obs, deterministic=False)
+            # print_probs(model, obs)
             obs, rewards, done, info = env.step(action)
 
         print(
