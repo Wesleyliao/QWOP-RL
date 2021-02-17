@@ -19,7 +19,7 @@ REPLAY_START = 5000
 BUFFER_SIZE = 15000
 REPLAY_RATIO = 6
 LEARNING_RATE = 7e-4 * (1 / 100)
-LR_SCHEDULE = 'double_middle_drop'
+LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
