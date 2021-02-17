@@ -92,13 +92,25 @@ class QWOPEnv(gym.Env):
             reward2 = 0
 
         # Penalize for torso vertical velocity
-        reward3 = -abs(torso_y - self.previous_torso_y) / 5
+        reward3 = -abs(torso_y - self.previous_torso_y) / 4
+
+        # Penalize for bending knees too much
+        if (
+            body_state['joints']['leftKnee'] < -0.9
+            or body_state['joints']['rightKnee'] < -0.9
+        ):
+            reward4 = (
+                min(body_state['joints']['leftKnee'], body_state['joints']['rightKnee'])
+                / 6
+            )
+        else:
+            reward4 = 0
 
         # Combine rewards
-        reward = reward1 + reward2 + reward3
+        reward = reward1 + reward2 + reward3 + reward4
 
-        # print('Rewards: {:3.1f}, {:3.1f}, {:3.1f}'.format(
-        #     reward1, reward2, reward3
+        # print('Rewards: {:3.1f}, {:3.1f}, {:3.1f}, {:3.1f}, {:3.1f}'.format(
+        #     reward1, reward2, reward3, reward4, reward
         # ))
 
         # Update previous scores
@@ -116,6 +128,11 @@ class QWOPEnv(gym.Env):
         #     body_state['torso']['position_x'],
         #     body_state['leftThigh']['position_x'],
         #     body_state['rightCalf']['position_x']
+        # ))
+
+        # print('Knee angles: {:3.2f}, {:3.2f}'.format(
+        #     body_state['joints']['leftKnee'],
+        #     body_state['joints']['rightKnee']
         # ))
 
         # Convert body state
