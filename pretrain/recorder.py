@@ -75,4 +75,5 @@ def generate_obs(environment, record_path, n_episodes=5):
     global env, model
     env = environment
     model = get_existing_model(os.path.join('models', 'Self6hr_human50_self114hr'))
-    generate_expert_traj(acer_expert, record_path, env, n_episodes=n_episodes)
+    # generate_expert_traj(acer_expert, record_path, env, n_episodes=n_episodes)
+    generate_expert_traj(human_expert, record_path, env, n_episodes=n_episodes)
