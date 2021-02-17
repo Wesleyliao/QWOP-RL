@@ -70,9 +70,14 @@ def acer_expert(_obs):
     return action
 
 
-def generate_obs(environment, record_path, n_episodes=5):
+def generate_obs(environment, record_path, n_episodes):
     global env, model
     env = environment
+
+    print('Starting record...')
     # model = get_existing_model(os.path.join('models', 'Self6hr_human50_self114hr'))
     # generate_expert_traj(acer_expert, record_path, env, n_episodes=n_episodes)
     generate_expert_traj(human_expert, record_path, env, n_episodes=n_episodes)
+    print(
+        f'Recording of {n_episodes} episodes complete. Saved file to {record_path}.npz'
+    )
