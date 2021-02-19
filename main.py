@@ -14,7 +14,7 @@ from pretrain import recorder
 
 # Training parameters
 MODEL_NAME = 'NewAcer_imitate_30hr'
-TRAIN_TIME_STEPS = 100000 * 4
+TRAIN_TIME_STEPS = 1 * 4
 REPLAY_START = 5000
 BUFFER_SIZE = 15000
 REPLAY_RATIO = 4
@@ -29,15 +29,15 @@ checkpoint_callback = CheckpointCallback(
 )
 
 # Imitation learning parameters
-RECORD_PATH = os.path.join('pretrain', 'testing123')
+RECORD_PATH = os.path.join('pretrain', 'kuro_try1')
 N_EPISODES = 10
-N_EPOCHS = 100
+N_EPOCHS = 1
 
 
 def get_new_model():
 
     # Define policy network
-    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[512, 256])
+    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[256, 128])
 
     # Initialize env and model
     env = QWOPEnv()
