@@ -13,7 +13,7 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'NewAcer_imitate_30hr'
+MODEL_NAME = 'Kuro_Acer'
 TRAIN_TIME_STEPS = 100000 * 3
 REPLAY_START = 5000
 BUFFER_SIZE = 15000
@@ -29,9 +29,9 @@ checkpoint_callback = CheckpointCallback(
 )
 
 # Imitation learning parameters
-RECORD_PATH = os.path.join('pretrain', 'kuro_try1')
+RECORD_PATH = os.path.join('pretrain', 'kuro_1_to_5')
 N_EPISODES = 10
-N_EPOCHS = 1
+N_EPOCHS = 100
 
 
 def get_new_model():
