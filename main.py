@@ -31,7 +31,8 @@ checkpoint_callback = CheckpointCallback(
 # Imitation learning parameters
 RECORD_PATH = os.path.join('pretrain', 'kuro_1_to_5')
 N_EPISODES = 10
-N_EPOCHS = 100
+N_EPOCHS = 500
+PRETRAIN_LEARNING_RATE = 0.00001  # 0.0001
 
 
 def get_new_model():
@@ -191,7 +192,9 @@ def main(train, test, record, imitate):
 
     if imitate:
         model = get_model(MODEL_PATH)
-        imitation_learning.imitate(model, RECORD_PATH, MODEL_PATH, N_EPOCHS)
+        imitation_learning.imitate(
+            model, RECORD_PATH, MODEL_PATH, PRETRAIN_LEARNING_RATE, N_EPOCHS
+        )
 
     if not (test or train or record or imitate):
         with click.Context(main) as ctx:
