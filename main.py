@@ -13,12 +13,12 @@ from pretrain import imitation_learning
 from pretrain import recorder
 
 # Training parameters
-MODEL_NAME = 'NewAcer_imitate_39hr'
-TRAIN_TIME_STEPS = 100000 * 3
+MODEL_NAME = 'Kuro_Acer_15hr'
+TRAIN_TIME_STEPS = 100000 * 8
 REPLAY_START = 5000
 BUFFER_SIZE = 15000
-REPLAY_RATIO = 0
-LEARNING_RATE = 7e-4 * (1 / 130)
+REPLAY_RATIO = 3
+LEARNING_RATE = 7e-4 * (1 / 3)
 LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
