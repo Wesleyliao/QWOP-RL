@@ -3,10 +3,10 @@ import time
 
 import click
 import tensorflow as tf
-from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
 from stable_baselines.common.vec_env import SubprocVecEnv
 
+from agents.ACERfD import ACER
 from game.env import ACTIONS
 from game.env import QWOPEnv
 from pretrain import imitation_learning
