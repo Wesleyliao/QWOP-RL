@@ -43,17 +43,7 @@ def get_trajectories():
     assert starts.shape == dones.shape
     assert sum(starts) == sum(dones)
 
-    # Separate them into episodes
-    episodes = []
-    cumulative_flag = np.cumsum(starts) - 1
-
-    for i in range(sum(dones)):
-        mask = cumulative_flag == i
-        assert sum(dones[mask]) == 1, f'dones \n{dones.shape}\n{dones}'
-        assert dones[mask][-1] == 1, f'dones \n{dones.shape}\n{dones}'
-        episodes.append((actions[mask], states[mask], rewards[mask], dones[mask]))
-
-    return episodes
+    return actions, states, rewards, dones
 
 
 # For ACER
@@ -830,7 +820,8 @@ class ACER(ActorCriticRLModel):
         callback = self._init_callback(callback)
 
         # GET DEMONSTRATIONS
-        self.demonstrations = get_trajectories()
+        expert_actions, expert_states, expert_rewards, expert_dones = get_trajectories()
+        expert_i, expert_n = 1, len(expert_actions)
 
         with SetVerbosity(self.verbose), TensorboardWriter(
             self.graph, self.tensorboard_log, tb_log_name, new_tb_log
@@ -876,8 +867,27 @@ class ACER(ActorCriticRLModel):
                     buffer.put(enc_obs, actions, rewards, mus, dones, masks)
 
                     # For every on-policy trajectory added, also add expert trajectory
+                    batch_actions = expert_actions[expert_i : expert_i + self.n_steps]
+                    batch_states = expert_states[expert_i : expert_i + self.n_steps + 1]
+                    batch_rewards = expert_rewards[expert_i : expert_i + self.n_steps]
+                    batch_dones = expert_dones[expert_i : expert_i + self.n_steps]
+                    batch_masks = expert_dones[expert_i - 1 : expert_i + self.n_steps]
+                    batch_mus = self.proba_step(batch_states[:-1], None, batch_dones)
 
-                    # Mask as extra False in front of dones?
+                    buffer.put(
+                        batch_states[np.newaxis, :, :],
+                        batch_actions[np.newaxis, :],
+                        batch_rewards[np.newaxis, :],
+                        batch_mus[np.newaxis, :, :],
+                        batch_dones[np.newaxis, :],
+                        batch_masks[np.newaxis, :],
+                    )
+
+                    expert_i += self.n_steps
+                    next_end = expert_i + self.n_steps + 1
+                    if next_end >= expert_n:
+                        print('Finished an epoch of demonstration data.')
+                        expert_i = (next_end % expert_n) + 1
 
                 if writer is not None:
                     total_episode_reward_logger(
@@ -1099,5 +1109,4 @@ class _Runner(AbstractEnvRunner):
 
         # shapes are now [nenv, nsteps, []]
         # When pulling from buffer, arrays will now be reshaped in place, preventing a deep copy.
-
         return enc_obs, mb_obs, mb_actions, mb_rewards, mb_mus, mb_dones, mb_masks
