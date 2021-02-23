@@ -3,22 +3,24 @@ import time
 
 import click
 import tensorflow as tf
+from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
 from stable_baselines.common.vec_env import SubprocVecEnv
 
-from agents.ACERfD import ACER
 from game.env import ACTIONS
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
+# from agents.ACERfD import ACER
+
 # Training parameters
-MODEL_NAME = 'Kuro_Acer_39hr'
+MODEL_NAME = 'Kuro_Acer_39hr_self24hr'
 TRAIN_TIME_STEPS = 100000 * 4
-REPLAY_START = 10000000
-BUFFER_SIZE = 1000
-REPLAY_RATIO = 0
-LEARNING_RATE = 7e-4 * (1 / 120)
+REPLAY_START = 2000
+BUFFER_SIZE = 3000
+REPLAY_RATIO = 3
+LEARNING_RATE = 7e-4 * (1 / 160)
 LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
