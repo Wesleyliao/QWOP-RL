@@ -15,12 +15,12 @@ from pretrain import recorder
 # from agents.ACERfD import ACER
 
 # Training parameters
-MODEL_NAME = 'Kuro_Acer_39hr_self24hr'
-TRAIN_TIME_STEPS = 100000 * 4
+MODEL_NAME = 'test_model'
+TRAIN_TIME_STEPS = 100000 * 3
 REPLAY_START = 2000
 BUFFER_SIZE = 3000
 REPLAY_RATIO = 3
-LEARNING_RATE = 7e-4 * (1 / 160)
+LEARNING_RATE = 7e-4 * (1 / 350)
 LR_SCHEDULE = 'linear'
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
