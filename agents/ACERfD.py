@@ -1,3 +1,5 @@
+# Forked from https://github.com/hill-a/stable-baselines/blob/master/stable_baselines/acer/acer_simple.py
+# Modified to do hybrid replay buffer; streamed and not persisting
 import os
 import time
 import warnings
