@@ -13,19 +13,18 @@ from pretrain import recorder
 
 # from stable_baselines import DQN
 
-# from agents.ACERfD import ACER
 
 # Training parameters
 MODEL_NAME = 'Kuro_DQN_new'
-EXPLORATION_FRACTION = 0.2
+EXPLORATION_FRACTION = 0.4
 LEARNING_STARTS = 1000
-EXPLORATION_INITIAL_EPS = 0.01
-EXPLORATION_FINAL_EPS = 0.01
+EXPLORATION_INITIAL_EPS = 1.0
+EXPLORATION_FINAL_EPS = 0.05
 BUFFER_SIZE = 50000
 BATCH_SIZE = 32
 TRAIN_FREQ = 4
 LEARNING_RATE = 0.0005
-TRAIN_TIME_STEPS = 300000
+TRAIN_TIME_STEPS = 250000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -153,7 +152,7 @@ def run_test():
         obs = env.reset()
         while not done:
 
-            action, _states = model.predict(obs, deterministic=False)
+            action, _states = model.predict(obs)
             # print_probs(model, obs)
             obs, rewards, done, info = env.step(action)
 

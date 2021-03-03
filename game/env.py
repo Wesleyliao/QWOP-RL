@@ -109,11 +109,11 @@ class QWOPEnv(gym.Env):
         # Combine rewards
         reward = reward1 + reward2 + reward3 + reward4
 
-        print(
-            'Rewards: {:3.1f}, {:3.1f}, {:3.1f}, {:3.1f}, {:3.1f}'.format(
-                reward1, reward2, reward3, reward4, reward
-            )
-        )
+        # print(
+        #     'Rewards: {:3.1f}, {:3.1f}, {:3.1f}, {:3.1f}, {:3.1f}'.format(
+        #         reward1, reward2, reward3, reward4, reward
+        #     )
+        # )
 
         # Update previous scores
         self.previous_torso_x = torso_x
