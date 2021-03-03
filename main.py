@@ -2,26 +2,30 @@ import os
 import time
 
 import click
-import tensorflow as tf
-from stable_baselines import ACER
 from stable_baselines.common.callbacks import CheckpointCallback
-from stable_baselines.common.vec_env import SubprocVecEnv
+from stable_baselines.deepq.policies import FeedForwardPolicy
 
+from agents.DQNfD import DQN
 from game.env import ACTIONS
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
+# from stable_baselines import DQN
+
 # from agents.ACERfD import ACER
 
 # Training parameters
-MODEL_NAME = 'test_model'
-TRAIN_TIME_STEPS = 100000 * 3
-REPLAY_START = 2000
-BUFFER_SIZE = 3000
-REPLAY_RATIO = 3
-LEARNING_RATE = 7e-4 * (1 / 350)
-LR_SCHEDULE = 'linear'
+MODEL_NAME = 'Kuro_DQN_new'
+EXPLORATION_FRACTION = 0.2
+LEARNING_STARTS = 1000
+EXPLORATION_INITIAL_EPS = 0.01
+EXPLORATION_FINAL_EPS = 0.01
+BUFFER_SIZE = 50000
+BATCH_SIZE = 32
+TRAIN_FREQ = 4
+LEARNING_RATE = 0.0005
+TRAIN_TIME_STEPS = 300000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
@@ -37,17 +41,25 @@ N_EPOCHS = 500
 PRETRAIN_LEARNING_RATE = 0.00001  # 0.0001
 
 
-def get_new_model():
+class CustomDQNPolicy(FeedForwardPolicy):
+    def __init__(self, *args, **kwargs):
+        super(CustomDQNPolicy, self).__init__(
+            *args,
+            **kwargs,
+            layers=[256, 128],
+            layer_norm=True,
+            feature_extraction="mlp",
+        )
 
-    # Define policy network
-    policy_kwargs = dict(act_fun=tf.nn.relu, net_arch=[256, 128])
+
+def get_new_model():
 
     # Initialize env and model
     env = QWOPEnv()
-    model = ACER(
-        'MlpPolicy',
+    model = DQN(
+        CustomDQNPolicy,
         env,
-        policy_kwargs=policy_kwargs,
+        prioritized_replay=True,
         verbose=1,
         tensorboard_log=TENSORBOARD_PATH,
     )
@@ -60,10 +72,10 @@ def get_existing_model(model_path):
     print('--- Training from existing model', model_path, '---')
 
     # Load model
-    model = ACER.load(model_path, tensorboard_log=TENSORBOARD_PATH)
+    model = DQN.load(model_path, tensorboard_log=TENSORBOARD_PATH)
 
     # Set environment
-    env = SubprocVecEnv([lambda: QWOPEnv()])
+    env = QWOPEnv()  # SubprocVecEnv([lambda: QWOPEnv()])
     model.set_env(env)
 
     return model
@@ -83,10 +95,12 @@ def run_train(model_path=MODEL_PATH):
 
     model = get_model(model_path)
     model.learning_rate = LEARNING_RATE
+    model.learning_starts = LEARNING_STARTS
+    model.exploration_initial_eps = EXPLORATION_INITIAL_EPS
+    model.exploration_final_eps = EXPLORATION_FINAL_EPS
     model.buffer_size = BUFFER_SIZE
-    model.replay_start = REPLAY_START
-    model.replay_ratio = REPLAY_RATIO
-    model.lr_schedule = LR_SCHEDULE
+    model.batch_size = BATCH_SIZE
+    model.train_freq = TRAIN_FREQ
 
     # Train and save
     t = time.time()
@@ -125,7 +139,7 @@ def run_test():
 
     # Initialize env and model
     env = QWOPEnv()
-    model = ACER.load(MODEL_PATH)
+    model = DQN.load(MODEL_PATH)
 
     input('Press Enter to start.')
 

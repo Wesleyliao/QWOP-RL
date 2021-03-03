@@ -29,8 +29,6 @@ from stable_baselines.common.tf_util import total_episode_reward_logger
 
 
 # Get and process expert trajectories
-
-
 def get_trajectories():
 
     data = np.load(os.path.join('pretrain', 'kuro_1_to_5.npz'))
