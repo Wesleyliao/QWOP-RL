@@ -59,6 +59,7 @@ class QWOPEnv(gym.Env):
         self.driver.find_element_by_xpath("//body").click()
 
         self.keyboard = Controller()
+        self.last_press_time = time.time()
 
     def _get_variable_(self, var_name):
         return self.driver.execute_script(f'return {var_name};')
@@ -162,6 +163,8 @@ class QWOPEnv(gym.Env):
             self.keyboard.press(char)
             self.pressed_keys.add(char)
 
+        # print('pressed for', time.time() - self.last_press_time)
+        # self.last_press_time = time.time()
         time.sleep(PRESS_DURATION)
 
     def reset(self):

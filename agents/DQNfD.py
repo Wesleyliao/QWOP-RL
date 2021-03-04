@@ -329,18 +329,19 @@ class DQN(OffPolicyRLModel):
 
                 # Add Kuro's data
                 i = expert_i
-                self.replay_buffer_add(
-                    expert_states[i],
-                    expert_actions[i],
-                    expert_rewards[i],
-                    expert_states[i + 1],
-                    expert_dones[i],
-                    None,
-                )
-                expert_i += 1
-                if expert_i + 2 >= expert_n:
-                    expert_i = 0
-                    print('Finished an epoch of demonstration data.')
+                if self.num_timesteps % 2 == 0:
+                    self.replay_buffer_add(
+                        expert_states[i],
+                        expert_actions[i],
+                        expert_rewards[i],
+                        expert_states[i + 1],
+                        expert_dones[i],
+                        None,
+                    )
+                    expert_i += 1
+                    if expert_i + 2 >= expert_n:
+                        expert_i = 0
+                        print('Finished an epoch of demonstration data.')
 
                 obs = new_obs
                 # Save the unnormalized observation
