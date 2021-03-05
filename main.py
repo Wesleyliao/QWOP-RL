@@ -2,29 +2,29 @@ import os
 import time
 
 import click
+from stable_baselines import DQN
 from stable_baselines.common.callbacks import CheckpointCallback
 from stable_baselines.deepq.policies import FeedForwardPolicy
 
-from agents.DQNfD import DQN
 from game.env import ACTIONS
 from game.env import QWOPEnv
 from pretrain import imitation_learning
 from pretrain import recorder
 
-# from stable_baselines import DQN
+# from agents.DQNfD import DQN
 
 
 # Training parameters
-MODEL_NAME = 'Kuro_DQN_9hr'
+MODEL_NAME = 'Kuro_DQN_18hr'
 EXPLORATION_FRACTION = 0.3
 LEARNING_STARTS = 2000
-EXPLORATION_INITIAL_EPS = 0.4
+EXPLORATION_INITIAL_EPS = 0.2
 EXPLORATION_FINAL_EPS = 0.02
 BUFFER_SIZE = 100000
 BATCH_SIZE = 32
 TRAIN_FREQ = 2
-LEARNING_RATE = 0.0001
-TRAIN_TIME_STEPS = 300000
+LEARNING_RATE = 0.00007
+TRAIN_TIME_STEPS = 400000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
