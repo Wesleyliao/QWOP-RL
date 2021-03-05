@@ -15,22 +15,22 @@ from pretrain import recorder
 
 
 # Training parameters
-MODEL_NAME = 'Kuro_DQN_18hr'
+MODEL_NAME = 'Kuro_DQN_30hr'
 EXPLORATION_FRACTION = 0.3
-LEARNING_STARTS = 2000
+LEARNING_STARTS = 3000
 EXPLORATION_INITIAL_EPS = 0.2
 EXPLORATION_FINAL_EPS = 0.02
-BUFFER_SIZE = 100000
-BATCH_SIZE = 32
+BUFFER_SIZE = 300000
+BATCH_SIZE = 64
 TRAIN_FREQ = 4
-LEARNING_RATE = 0.00007
-TRAIN_TIME_STEPS = 400000
+LEARNING_RATE = 0.00005
+TRAIN_TIME_STEPS = 100000
 MODEL_PATH = os.path.join('models', MODEL_NAME)
 TENSORBOARD_PATH = './tensorboard/'
 
 # Checkpoint callback
 checkpoint_callback = CheckpointCallback(
-    save_freq=100000, save_path='./logs/', name_prefix=MODEL_NAME
+    save_freq=10000, save_path='./logs/', name_prefix=MODEL_NAME
 )
 
 # Imitation learning parameters
