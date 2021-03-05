@@ -15,7 +15,7 @@ from pretrain import recorder
 
 
 # Training parameters
-MODEL_NAME = 'Kuro_DQN_30hr'
+MODEL_NAME = 'FastDQN'
 EXPLORATION_FRACTION = 0.3
 LEARNING_STARTS = 3000
 EXPLORATION_INITIAL_EPS = 0.2

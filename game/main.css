@@ -1,8 +1,18 @@
 #timer {
   position: absolute;
   top: 410;
-  left:520;
+  left: 530;
   font-size: xx-large;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif ;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
   font-weight: bold;
+}
+
+#actions {
+  position: absolute;
+  top: 417;
+  left: 10;
+  font-size: x-large;
+  font-family: "Lucida Console", "Courier New", monospace;
+  /* font-weight: bold; */
 }
