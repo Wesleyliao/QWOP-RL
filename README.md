@@ -2,7 +2,7 @@
 
 ## Description
 
-Train an AI agent to play QWOP using reinforcement learning and imitation learning. Check out the [video summary on Youtube](https://youtu.be/-0WQnwNFqJM) or the [write-up on Medium](https://towardsdatascience.com/achieving-human-level-performance-in-qwop-using-reinforcement-learning-and-imitation-learning-81b0a9bbac96). 
+Train an AI agent to play QWOP using reinforcement learning and imitation learning. Check out the [1st agent video summary](https://youtu.be/-0WQnwNFqJM), [World Record speedrun](https://youtu.be/82sTpO_EpEc) or the [write-up on Medium](https://towardsdatascience.com/achieving-human-level-performance-in-qwop-using-reinforcement-learning-and-imitation-learning-81b0a9bbac96). 
 
 ![image](img/main.gif)
 
